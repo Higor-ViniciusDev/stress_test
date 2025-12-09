@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Higor-ViniciusDev/stress_cli/internal"
+	"github.com/Higor-ViniciusDev/stress_cli/internal/usecase"
 )
 
 func init() {
@@ -16,7 +17,21 @@ func init() {
 }
 
 func main() {
-	fmt.Println("valor da flag URL:", *internal.FlagURL)
-	fmt.Println("valor da flag requests:", *internal.FlagReq)
-	fmt.Println("valor da flag concurrency:", *internal.FlagConc)
+	if *internal.FlagURL == "" {
+		fmt.Println("URL invalida, por favor informe uma URL válida usando a flag -url")
+		return
+	}
+
+	if *internal.FlagReq <= 0 {
+		fmt.Println("Número de requests inválido, por favor informe um número maior que zero usando a flag -requests")
+		return
+	}
+
+	if *internal.FlagConc <= 0 {
+		fmt.Println("Número de concorrência inválido, por favor informe um número maior que zero usando a flag -concurrency")
+		return
+	}
+
+	novoTeste := usecase.NewTesteUsecase()
+	novoTeste.ExecutarTeste(*internal.FlagURL, *internal.FlagReq, *internal.FlagConc)
 }
