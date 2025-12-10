@@ -41,7 +41,7 @@ func NovoTeste(url string, intRequests int, intConc int) *TesteRequest {
 		Url:            url,
 		Requests:       intRequests,
 		Conc:           intConc,
-		InputChan:      make(chan MessageRequest, intRequests),
+		InputChan:      make(chan MessageRequest, intConc),
 		ServiceRequest: service.NewServiceRequest(),
 	}
 
@@ -83,9 +83,10 @@ func (t *TesteRequest) Processar() {
 	defer t.wg.Done() // Espera concluir o processamento da request
 
 	for msg := range t.InputChan {
-		ctx := context.Background()
+		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 
 		retorno := t.ServiceRequest.FazerRequest(ctx, t.Url)
+		cancel()
 
 		requestRetorno := ResponseRequest{
 			CodeResponse: retorno.Code,

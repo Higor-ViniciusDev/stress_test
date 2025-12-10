@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"net/http"
+	"time"
 )
 
 type ServiceRequest struct {
@@ -16,7 +17,16 @@ type RetornoRequest struct {
 
 func NewServiceRequest() *ServiceRequest {
 	return &ServiceRequest{
-		Client: &http.Client{},
+		Client: &http.Client{
+			//Adicionado esses parametros, pois os primeiros teste indicou altos ms para concluir, mesmo tendo asta goroutines
+			Transport: &http.Transport{
+				MaxIdleConns:        100,
+				MaxIdleConnsPerHost: 100,
+				IdleConnTimeout:     90 * time.Second,
+				DisableKeepAlives:   false,
+				DisableCompression:  false,
+			},
+		},
 	}
 }
 
