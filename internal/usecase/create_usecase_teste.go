@@ -30,10 +30,12 @@ func (t *TesteUsecase) ExecutarTeste(url string, request, concurrency int) *Rela
 	successCount := 0 // Code 200
 	errorCount := 0
 	statusCodes := make(map[int]int)
+	// errorsMap := make(map[string]int) // ← NOVO
 
 	for _, result := range retornoResponse {
 		if result.Error != nil {
 			errorCount++
+			// errorsMap[result.Error.Error()]++
 			continue
 		}
 
@@ -42,6 +44,12 @@ func (t *TesteUsecase) ExecutarTeste(url string, request, concurrency int) *Rela
 			successCount++
 		}
 	}
+
+	// // ← Printe os erros
+	// fmt.Println("\nErros encontrados:")
+	// for errMsg, count := range errorsMap {
+	// 	fmt.Printf("   • %s -> %d vezes\n", errMsg, count)
+	// }
 
 	return &RelatorioDTO{
 		TempoTotalGasto:    novoEntity.TimeFinal.Sub(novoEntity.TimeInicial),

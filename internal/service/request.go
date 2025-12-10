@@ -18,7 +18,7 @@ type RetornoRequest struct {
 func NewServiceRequest() *ServiceRequest {
 	return &ServiceRequest{
 		Client: &http.Client{
-			//Adicionado esses parametros, pois os primeiros teste indicou altos ms para concluir, mesmo tendo asta goroutines
+			//Adicionado esses parametros, pois os primeiros teste indicou altos ms para concluir, mesmo tendo altas goroutines
 			Transport: &http.Transport{
 				MaxIdleConns:        100,
 				MaxIdleConnsPerHost: 100,
