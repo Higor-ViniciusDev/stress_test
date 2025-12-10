@@ -33,5 +33,6 @@ func main() {
 	}
 
 	novoTeste := usecase.NewTesteUsecase()
-	novoTeste.ExecutarTeste(*internal.FlagURL, *internal.FlagReq, *internal.FlagConc)
+	retornoDTO := novoTeste.ExecutarTeste(*internal.FlagURL, *internal.FlagReq, *internal.FlagConc)
+	novoTeste.PrintRelatorioStdout(retornoDTO)
 }

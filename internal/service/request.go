@@ -6,29 +6,35 @@ import (
 )
 
 type ServiceRequest struct {
+	Client *http.Client
 }
 
-func (s *ServiceRequest) FazerRequest(ctx context.Context, url string) map[string]interface{} {
-	client := &http.Client{}
+type RetornoRequest struct {
+	Code  int
+	Error error
+}
+
+func NewServiceRequest() *ServiceRequest {
+	return &ServiceRequest{
+		Client: &http.Client{},
+	}
+}
+
+func (s *ServiceRequest) FazerRequest(ctx context.Context, url string) *RetornoRequest {
+
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return map[string]interface{}{
-			"status": false,
-			"Code":   0,
-		}
+		return &RetornoRequest{Code: 0, Error: err}
 	}
-	defer req.Body.Close()
 
-	respons, err := client.Do(req)
+	resp, err := s.Client.Do(req)
 	if err != nil {
-		return map[string]interface{}{
-			"status": false,
-			"Code":   0,
-		}
+		return &RetornoRequest{Code: 0, Error: err}
 	}
+	defer resp.Body.Close()
 
-	return map[string]interface{}{
-		"status": true,
-		"Code":   respons.StatusCode,
+	return &RetornoRequest{
+		Code:  resp.StatusCode,
+		Error: nil,
 	}
 }
